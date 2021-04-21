@@ -1,0 +1,11 @@
+## Interface: 90002
+## Title: Misdirection
+## Notes: A floating button that directs to pets or tanks
+## Author: Created by Jot
+## eMail: N/A
+## URL: N/A
+## Version: 1
+## Dependencies:
+## SavedVariablesPerCharacter: MDB_Conf
+
+Misdirection.lua
