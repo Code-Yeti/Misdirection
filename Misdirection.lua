@@ -1,6 +1,7 @@
 -- VARIABLES
 MDB_Conf = {};
-local Tank = ""
+local Tank = "pet"
+local TankName = ""
 local CooldownActive = false
 
 -- Control Frame
@@ -54,6 +55,15 @@ MDB:SetScript("OnMouseUp", function(self, button)
 
     end
 end)
+MDB:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(MDB, "ANCHOR_RIGHT")
+    GameTooltip:SetText(TankName)
+    GameTooltip:Show() 
+end)
+MDB:SetScript("OnLeave", function(self)
+    GameTooltip:Hide()
+end)
+
 
 -- MDB:Hide();
 
@@ -69,16 +79,35 @@ local function checkParty()
     memberCount = GetNumGroupMembers();
     Tank = "";
     for groupindex = 1,memberCount do
-        if (GetPartyMember(groupindex)) then
-            memberCount = memberCount + 1
-            if(UnitGroupRolesAssigned(Unit) == "TANK") then
+        if(UnitGroupRolesAssigned(memberCount) == "TANK") then
+            if IsInRaid() then
+                Tank = "raid" .. groupindex;
+                local name, realm = UnitName("raid" .. groupindex)
+                if name ~= TankName then 
+                    DEFAULT_CHAT_FRAME:AddMessage("|cffff0000Misdirection|r New Tank: " .. TankName);
+                end
+                TankName = name
+            else
                 Tank = "party" .. groupindex;
-                --break
+                local name, realm = UnitName("party" .. groupindex)
+                if name ~= TankName then 
+                    DEFAULT_CHAT_FRAME:AddMessage("|cffff0000Misdirection|r New Tank: " .. TankName);
+                end
+                TankName = name
             end
+            
+            --break
         end
+        memberCount = memberCount + 1
     end
     if(Tank == "") then 
         Tank = "pet"
+        local name, realm = UnitName("pet")
+        if name ~= TankName then 
+            DEFAULT_CHAT_FRAME:AddMessage("|cffff0000Misdirection|r New Tank: " .. name);
+        end
+
+        TankName = name
     end
     MDB:SetAttribute("unit", Tank) -- Set target
 end
@@ -95,6 +124,7 @@ MDB:SetScript("OnEvent", function(self,event,arg1)
         end
         MDB:SetPoint("CENTER",MDB_Conf.location.x,MDB_Conf.location.y);
         DEFAULT_CHAT_FRAME:AddMessage("|cffff0000Misdirection|r Locked and Loaded!");
+        checkParty();
     end
 
     if event == "UNIT_AURA" or event == "SPELL_UPDATE_COOLDOWN" or event == "ACTIONBAR_UPDATE_COOLDOWN" then
