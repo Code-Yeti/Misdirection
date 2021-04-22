@@ -103,7 +103,6 @@ MDB:SetScript("OnEvent", function(self,event,arg1)
         for i=1,40 do
             local name, icon, _, _, _, etime = UnitBuff("player",i)
             if name == "Misdirection" then
-               DEFAULT_CHAT_FRAME:AddMessage("MD Found")
                mdFound = true
                break
             end
