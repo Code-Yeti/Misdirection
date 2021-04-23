@@ -121,7 +121,8 @@ MDB:SetScript("OnEvent", function(self,event,arg1)
         
         local localizedClass, englishClass, classIndex = UnitClass("player");
         local lvl = UnitLevel("player")
-        if englishclass == "HUNTER" and lvl >= 27 then
+        --DEFAULT_CHAT_FRAME:AddMessage(("|cffff0000Misdirection|r %s %d"):format(localizedClass, lvl)); -- Debug class and level
+        if localizedClass == "Hunter" and lvl >= 27 then
             -- Hunter Found & Correct Level
             DEFAULT_CHAT_FRAME:AddMessage("|cffff0000Misdirection|r Locked and Loaded!");
             -- Register other events
