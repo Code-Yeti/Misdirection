@@ -67,13 +67,8 @@ end)
 
 -- MDB:Hide();
 
--- Register Loot Events
+-- Register Loaded Event
 MDB:RegisterEvent("ADDON_LOADED");
-MDB:RegisterEvent("GROUP_ROSTER_UPDATE");
-MDB:RegisterEvent("PLAYER_REGEN_ENABLED");
-MDB:RegisterEvent("UNIT_AURA");
-MDB:RegisterEvent("SPELL_UPDATE_COOLDOWN");
-MDB:RegisterEvent("ACTIONBAR_UPDATE_COOLDOWN");
 
 local function checkParty()
     memberCount = GetNumGroupMembers();
@@ -123,8 +118,23 @@ MDB:SetScript("OnEvent", function(self,event,arg1)
             MDB_Conf.location.y = -200;
         end
         MDB:SetPoint("CENTER",MDB_Conf.location.x,MDB_Conf.location.y);
-        DEFAULT_CHAT_FRAME:AddMessage("|cffff0000Misdirection|r Locked and Loaded!");
-        checkParty();
+        
+        local localizedClass, englishClass, classIndex = UnitClass("player");
+        local lvl = UnitLevel("player")
+        if englishclass == "HUNTER" and lvl >= 27 then
+            -- Hunter Found & Correct Level
+            DEFAULT_CHAT_FRAME:AddMessage("|cffff0000Misdirection|r Locked and Loaded!");
+            -- Register other events
+            MDB:RegisterEvent("GROUP_ROSTER_UPDATE");
+            MDB:RegisterEvent("PLAYER_REGEN_ENABLED");
+            MDB:RegisterEvent("UNIT_AURA");
+            MDB:RegisterEvent("SPELL_UPDATE_COOLDOWN");
+            MDB:RegisterEvent("ACTIONBAR_UPDATE_COOLDOWN");
+            checkParty();
+        else
+            MDB:Hide()
+            CDF:Hide()
+        end
     end
 
     if event == "UNIT_AURA" or event == "SPELL_UPDATE_COOLDOWN" or event == "ACTIONBAR_UPDATE_COOLDOWN" then
